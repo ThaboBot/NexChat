@@ -1,1 +1,20 @@
-// Flows will be imported for their side effects in this file.
+import { config } from 'dotenv';
+config();
+
+import '@/ai/flows/auto-replies-based-on-routine.ts';
+import '@/ai/flows/autonomous-smart-agents.ts';
+import '@/ai/flows/chat-poll-analysis.ts';
+import '@/ai/flows/chatgpt-plugin-integration.ts';
+import '@/ai/flows/contextual-reminders.ts';
+import '@/ai/flows/custom-ai-avatar-builder.ts';
+import '@/ai/flows/dynamic-message-animation.ts';
+import '@/ai/flows/emotionally-aware-messages.ts';
+import '@/ai/flows/live-fact-checker.ts';
+import '@/ai/flows/message-rewriter.ts';
+import '@/ai/flows/message-summarization.ts';
+import '@/ai/flows/mood-aware-themes.ts';
+import '@/ai/flows/real-time-translation.ts';
+import '@/ai/flows/smart-scheduling-assistant.ts';
+import '@/ai/flows/translate-messages.ts';
+import '@/ai/flows/analyze-polls.ts';
+import '@/ai/flows/summarize-long-messages.ts';
