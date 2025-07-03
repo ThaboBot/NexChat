@@ -1,12 +1,13 @@
 
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { ChatSidebar } from '@/components/chat/chat-sidebar';
 import { ChatView } from '@/components/chat/chat-view';
 import type { Chat, User, Message, Poll } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { getAnimation } from '@/lib/actions';
+import { LoadingScreen } from '@/components/loading-screen';
 
 const loggedInUser: User = {
   id: 'user-1',
@@ -48,6 +49,14 @@ const initialChats: Chat[] = [
 export default function Home() {
   const [chats, setChats] = useState<Chat[]>(initialChats);
   const [activeChatId, setActiveChatId] = useState<string>('chat-3');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const activeChat = useMemo(() => chats.find(c => c.id === activeChatId), [chats, activeChatId]);
 
@@ -101,8 +110,8 @@ export default function Home() {
     });
   };
 
-  if (!activeChat) {
-    return <div className="flex h-screen w-full items-center justify-center bg-background">Loading...</div>;
+  if (isLoading || !activeChat) {
+    return <LoadingScreen />;
   }
   
   const contacts = chats.map(chat => {
