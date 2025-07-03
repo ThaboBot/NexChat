@@ -10,6 +10,8 @@ import { smartSchedulingAssistant, type SmartSchedulingAssistantInput } from '@/
 import { analyzeChatPoll, type AnalyzeChatPollInput } from '@/ai/flows/chat-poll-analysis';
 import { buildCustomAIAvatar, type CustomAIAvatarInput } from '@/ai/flows/custom-ai-avatar-builder';
 import { generateAnimation, type GenerateAnimationInput } from '@/ai/flows/dynamic-message-animation';
+import { generateAutoReply, type GenerateAutoReplyInput } from '@/ai/flows/auto-replies-based-on-routine';
+import { getThemeAndMusic, type GetThemeAndMusicInput } from '@/ai/flows/mood-aware-themes';
 
 export async function getSummary(input: SummarizeMessageInput) {
     return await summarizeMessage(input);
@@ -45,4 +47,12 @@ export async function generateAvatar(input: CustomAIAvatarInput) {
 
 export async function getAnimation(input: GenerateAnimationInput) {
     return await generateAnimation(input);
+}
+
+export async function getAutoReply(input: GenerateAutoReplyInput) {
+    return await generateAutoReply(input);
+}
+
+export async function getMoodTheme(input: GetThemeAndMusicInput) {
+    return await getThemeAndMusic(input);
 }

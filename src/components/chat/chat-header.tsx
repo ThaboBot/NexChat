@@ -19,9 +19,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { MoreVertical, Users, CalendarPlus } from 'lucide-react';
+import { MoreVertical, Users, CalendarPlus, Paintbrush, Music } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { getScheduleSuggestions } from '@/lib/actions';
+import { getScheduleSuggestions, getMoodTheme } from '@/lib/actions';
 import { format } from 'date-fns';
 
 interface ChatHeaderProps {
@@ -32,10 +32,22 @@ interface ChatHeaderProps {
   chatHistory: string;
 }
 
+type MoodTheme = {
+    mood: string;
+    theme: {
+        primary: string;
+        background: string;
+        accent: string;
+    };
+    music: string;
+}
+
 export function ChatHeader({ chatName, chatAvatar, memberCount, isGroup, chatHistory }: ChatHeaderProps) {
   const { toast } = useToast();
   const [isScheduling, setIsScheduling] = useState(false);
   const [scheduleResult, setScheduleResult] = useState<any>(null);
+  const [isAnalyzingMood, setIsAnalyzingMood] = useState(false);
+  const [moodResult, setMoodResult] = useState<MoodTheme | null>(null);
 
   const handleSmartScheduling = async () => {
     setIsScheduling(true);
@@ -61,6 +73,28 @@ export function ChatHeader({ chatName, chatAvatar, memberCount, isGroup, chatHis
       setIsScheduling(false);
     }
   };
+
+  const handleMoodAnalysis = async () => {
+    setIsAnalyzingMood(true);
+    try {
+        const result = await getMoodTheme({ message: chatHistory });
+        setMoodResult(result);
+    } catch(e) {
+        toast({ variant: 'destructive', title: 'Mood Analysis Failed' });
+        setMoodResult(null);
+    } finally {
+        setIsAnalyzingMood(false);
+    }
+  };
+
+  const applyTheme = () => {
+    if (!moodResult) return;
+    document.documentElement.style.setProperty('--background', moodResult.theme.background);
+    document.documentElement.style.setProperty('--primary', moodResult.theme.primary);
+    document.documentElement.style.setProperty('--accent', moodResult.theme.accent);
+    toast({ title: 'Theme Applied!', description: `Switched to a ${moodResult.mood} theme.`});
+    setMoodResult(null);
+  }
 
   return (
     <>
@@ -92,6 +126,10 @@ export function ChatHeader({ chatName, chatAvatar, memberCount, isGroup, chatHis
                 <CalendarPlus className="mr-2 h-4 w-4" />
                 <span>{isScheduling ? 'Analyzing...' : 'Smart Schedule'}</span>
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleMoodAnalysis} disabled={isAnalyzingMood}>
+                <Paintbrush className="mr-2 h-4 w-4" />
+                <span>{isAnalyzingMood ? 'Analyzing...' : 'Analyze Mood'}</span>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -120,6 +158,41 @@ export function ChatHeader({ chatName, chatAvatar, memberCount, isGroup, chatHis
               toast({ title: "Success!", description: "Events have been added to your calendar (simulation)." });
               setScheduleResult(null);
             }}>Add to Calendar</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      
+      <AlertDialog open={!!moodResult} onOpenChange={() => setMoodResult(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>🎨 AI Mood Analysis</AlertDialogTitle>
+            <AlertDialogDescription>
+              The AI detected a <span className="font-bold text-primary">{moodResult?.mood}</span> mood. It suggests the following theme.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="space-y-4 text-sm">
+            <div>
+              <h5 className="font-semibold mb-2">Color Palette</h5>
+              <div className="flex gap-2">
+                 <div className="flex-1 p-2 rounded-md" style={{ backgroundColor: `hsl(${moodResult?.theme.background})`}}>
+                   <span style={{ color: `hsl(${moodResult?.theme.primary})`}}>Background</span>
+                 </div>
+                 <div className="flex-1 p-2 rounded-md" style={{ backgroundColor: `hsl(${moodResult?.theme.primary})`}}>
+                   <span style={{ color: `hsl(${moodResult?.theme.background})`}}>Primary</span>
+                 </div>
+                 <div className="flex-1 p-2 rounded-md" style={{ backgroundColor: `hsl(${moodResult?.theme.accent})`}}>
+                   <span style={{ color: `hsl(${moodResult?.theme.background})`}}>Accent</span>
+                 </div>
+              </div>
+            </div>
+             <div>
+              <h5 className="font-semibold flex items-center gap-2"><Music className="h-4 w-4"/> Music Suggestion</h5>
+              <p className="text-muted-foreground">{moodResult?.music}</p>
+            </div>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={applyTheme}>Apply Theme</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

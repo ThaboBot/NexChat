@@ -35,6 +35,7 @@ export function ChatView({ chat, user, onSendMessage, onPollVote }: ChatViewProp
       />
       <ChatInput 
         user={user}
+        chat={chat}
         onSendMessage={onSendMessage}
       />
     </div>

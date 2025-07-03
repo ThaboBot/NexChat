@@ -18,7 +18,11 @@ export type GetThemeAndMusicInput = z.infer<typeof GetThemeAndMusicInputSchema>;
 
 const GetThemeAndMusicOutputSchema = z.object({
   mood: z.string().describe('The detected mood of the message (e.g., happy, sad, angry).'),
-  theme: z.string().describe('A suggested theme for the app based on the mood.'),
+  theme: z.object({
+      primary: z.string().describe("The primary color in HSL format, e.g., '283 100% 41%'"),
+      background: z.string().describe("The background color in HSL format, e.g., '283 100% 8%'"),
+      accent: z.string().describe("The accent color in HSL format, e.g., '181 100% 74%'")
+  }).describe('A suggested theme for the app based on the mood, with colors in HSL format without the hsl() wrapper.'),
   music: z.string().describe('A suggested background music track based on the mood.'),
 });
 export type GetThemeAndMusicOutput = z.infer<typeof GetThemeAndMusicOutputSchema>;
@@ -33,11 +37,15 @@ const prompt = ai.definePrompt({
   output: {schema: GetThemeAndMusicOutputSchema},
   prompt: `You are an AI assistant that analyzes the mood of a chat message and suggests a theme and background music to match the mood.
 
-Analyze the following message and determine its mood. Then, suggest a theme and a background music track that would be appropriate for that mood.
+Analyze the following message and determine its mood. Then, suggest a theme with specific HSL color values and a background music track that would be appropriate for that mood.
 
 Message: {{{message}}}
 
-Respond in JSON format.
+Respond in JSON format. For the HSL values, provide them as strings like 'H S% L%'.
+For example:
+- primary: '210 40% 96.1%'
+- background: '222.2 84% 4.9%'
+- accent: '217.2 91.2% 59.8%'
 `,
 });
 
