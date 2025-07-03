@@ -12,6 +12,7 @@ import { NexchatLogo } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import type { User, Contact } from '@/lib/types';
 import { AvatarBuilder } from './avatar-builder';
+import { SettingsDialog } from './settings-dialog';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 interface ChatSidebarProps {
@@ -36,16 +37,21 @@ export function ChatSidebar({ user, contacts, activeChatId, onChatSelect }: Chat
             <NexchatLogo className="h-8 w-8" />
             <h1 className="text-xl font-bold text-primary font-headline">NEXCHAT</h1>
           </div>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Settings className="h-5 w-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              <p>Settings</p>
-            </TooltipContent>
-          </Tooltip>
+          <Dialog>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Settings className="h-5 w-5" />
+                  </Button>
+                </DialogTrigger>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <p>Settings</p>
+              </TooltipContent>
+            </Tooltip>
+            <SettingsDialog />
+          </Dialog>
         </div>
         
         <div className="p-4">
