@@ -44,3 +44,23 @@ export type Contact = {
   isOnline?: boolean;
   lastMessage: string;
 }
+
+export type MarketplaceListing = {
+  id: string;
+  title: string;
+  category: string;
+  price: number;
+  condition: string;
+  location: string;
+  trustScore: number;
+  shipping: string[];
+  tags: string[];
+};
+
+export type MarketplaceRequest = {
+  id: string;
+  title: string;
+  budget: number;
+  preferredCategories: string[];
+  urgency: 'Low' | 'Medium' | 'High';
+};

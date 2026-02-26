@@ -73,6 +73,25 @@ Follow these instructions to get a local copy of ChronoChat up and running for d
     npm run dev
     ```
 
+
+### Run the Python Marketplace API (optional but recommended)
+
+In a separate terminal, run:
+
+```sh
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+Set frontend API URL if needed:
+
+```sh
+export NEXT_PUBLIC_MARKETPLACE_API_URL="http://localhost:8000"
+```
+
 2.  **Start the Genkit development service** (in a separate terminal):
     This command starts the local Genkit server, which makes the AI flows available to your Next.js app.
     ```sh
