@@ -127,6 +127,4 @@ The project follows a standard Next.js App Router structure:
 -   `npm run start`: Starts a production server.
 -   `npm run lint`: Lints the project files.
 
----
 
-This README was generated with the help of AI in Firebase Studio.
